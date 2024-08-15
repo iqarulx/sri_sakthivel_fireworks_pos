@@ -60,6 +60,7 @@ dependencies:
   audioplayers: ^5.2.1
   esc_pos_printer_new:
     path: ./package/esc_pos_printer_new
+  firebase_storage: ^11.6.0
 
 dev_dependencies:
   flutter_test:

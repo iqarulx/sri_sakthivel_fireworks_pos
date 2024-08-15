@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/varibales.dart';
 
 import '../../../firebase/datamodel/datamodel.dart';
-// import '../../../firebase/firestorageprovider.dart';
+import '../../../firebase/firestorageprovider.dart';
 import '../../../firebase/firestore_provider.dart';
 import '../../../provider/imagepickerprovider.dart';
 import '../../../utlities/provider/localdb.dart';
@@ -163,23 +163,23 @@ class _StaffDetailsState extends State<StaffDetails> {
   updateStaffImage(File profileImage) async {
     loading(context);
     try {
-      // var downloadLink = await FireStorageProvider().uploadImage(
-      //   fileData: profileImage,
-      //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-      //   filePath: 'staff',
-      // );
-      // StaffDataModel model = StaffDataModel();
-      // model.profileImg = downloadLink;
-      // await FireStoreProvider()
-      //     .updateProfileStaff(staffData: model, docID: crtStaffData!.docID!)
-      //     .then((value) {
-      //   setState(() {
-      //     crtStaffData!.profileImg = downloadLink;
-      //   });
+      var downloadLink = await FireStorageProvider().uploadImage(
+        fileData: profileImage,
+        fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+        filePath: 'staff',
+      );
+      StaffDataModel model = StaffDataModel();
+      model.profileImg = downloadLink;
+      await FireStoreProvider()
+          .updateProfileStaff(staffData: model, docID: crtStaffData!.docID!)
+          .then((value) {
+        setState(() {
+          crtStaffData!.profileImg = downloadLink;
+        });
 
-      //   Navigator.pop(context);
-      //   snackBarCustom(context, true, "Successfully Update Staff");
-      // });
+        Navigator.pop(context);
+        snackBarCustom(context, true, "Successfully Update Staff");
+      });
     } catch (e) {
       Navigator.pop(context);
       snackBarCustom(context, false, e.toString());

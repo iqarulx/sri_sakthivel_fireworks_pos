@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
+import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
 import 'package:sri_sakthivel_fireworks_pos/screen/mainapp/homelanding.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/utlities.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/validation.dart';
@@ -122,51 +122,50 @@ class _RegisterCompanyState extends State<RegisterCompany> {
         }
 
         // Once update Data to upload Image
-        // FireStorageProvider storage = FireStorageProvider();
-        // var downloadLink = await storage.uploadImage(
-        //   fileData: profileImage!,
-        //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-        //   filePath: 'company',
-        // );
-        // if (downloadLink != null && downloadLink.isNotEmpty) {
-        await profile.doc(widget.docid).set(
-          {
-            // "company_logo": downloadLink.toString(),
-            "company_logo": "",
-          },
-          SetOptions(merge: true),
-        ).then((value) async {
-          LocalDbProvider localdb = LocalDbProvider();
-          await localdb
-              .createNewUser(
-            username: username.text,
-            uID: widget.uid,
-            companyID: widget.docid,
-            loginEmail: widget.email,
-            companyUniqueId: companyUnquieId.text,
-            isAdmin: true,
-            prCategory: true,
-            prCustomer: true,
-            prEstimate: true,
-            prOrder: true,
-            prProduct: true,
-            prBillofSupply: true,
-          )
-              .then((value) {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeLanding(),
-              ),
-            );
+        FireStorageProvider storage = FireStorageProvider();
+        var downloadLink = await storage.uploadImage(
+          fileData: profileImage!,
+          fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+          filePath: 'company',
+        );
+        if (downloadLink != null && downloadLink.isNotEmpty) {
+          await profile.doc(widget.docid).set(
+            {
+              "company_logo": downloadLink.toString(),
+            },
+            SetOptions(merge: true),
+          ).then((value) async {
+            LocalDbProvider localdb = LocalDbProvider();
+            await localdb
+                .createNewUser(
+              username: username.text,
+              uID: widget.uid,
+              companyID: widget.docid,
+              loginEmail: widget.email,
+              companyUniqueId: companyUnquieId.text,
+              isAdmin: true,
+              prCategory: true,
+              prCustomer: true,
+              prEstimate: true,
+              prOrder: true,
+              prProduct: true,
+              prBillofSupply: true,
+            )
+                .then((value) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeLanding(),
+                ),
+              );
+            });
           });
-        });
-        // } else {
-        //   // exit Loading Progroccess
-        //   Navigator.pop(context);
-        // }
+        } else {
+          // exit Loading Progroccess
+          Navigator.pop(context);
+        }
       } else {
         // exit Loading Progroccess
         Navigator.pop(context);

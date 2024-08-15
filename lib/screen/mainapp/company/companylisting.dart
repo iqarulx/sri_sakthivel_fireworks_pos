@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sri_sakthivel_fireworks_pos/firebase/firebase_auth_provider.dart';
-// import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
+import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/utlities.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/validation.dart';
 
@@ -104,30 +104,30 @@ class _CompanyListingState extends State<CompanyListing> {
               )
                   .then((value) async {
                 if (uploadCompanyPic != null) {
-                  // await FireStorageProvider()
-                  //     .uploadImage(
-                  //   fileData: uploadCompanyPic!,
-                  //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-                  //   filePath: "company",
-                  // )
-                  //     .then((downloadLink) async {
-                  //   if (downloadLink != null && downloadLink.isNotEmpty) {
-                  //     await FireStoreProvider()
-                  //         .updateCompanyPic(docId: cid, imageLink: downloadLink)
-                  //         .then((value) {
-                  //       Navigator.pop(context);
-                  //       snackBarCustom(
-                  //         context,
-                  //         true,
-                  //         "Successfully Updated Company Information",
-                  //       );
-                  //     });
-                  //   } else {
-                  //     // exit Loading Progroccess
-                  //     Navigator.pop(context);
-                  //     snackBarCustom(context, false, "Something went Wrong");
-                  //   }
-                  // });
+                  await FireStorageProvider()
+                      .uploadImage(
+                    fileData: uploadCompanyPic!,
+                    fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+                    filePath: "company",
+                  )
+                      .then((downloadLink) async {
+                    if (downloadLink != null && downloadLink.isNotEmpty) {
+                      await FireStoreProvider()
+                          .updateCompanyPic(docId: cid, imageLink: downloadLink)
+                          .then((value) {
+                        Navigator.pop(context);
+                        snackBarCustom(
+                          context,
+                          true,
+                          "Successfully Updated Company Information",
+                        );
+                      });
+                    } else {
+                      // exit Loading Progroccess
+                      Navigator.pop(context);
+                      snackBarCustom(context, false, "Something went Wrong");
+                    }
+                  });
                 } else {
                   Navigator.pop(context);
                   snackBarCustom(
