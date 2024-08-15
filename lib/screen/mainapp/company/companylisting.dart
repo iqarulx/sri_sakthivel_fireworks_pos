@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sri_sakthivel_fireworks_pos/firebase/firebase_auth_provider.dart';
-import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
+// import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/utlities.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/validation.dart';
 
@@ -74,7 +74,9 @@ class _CompanyListingState extends State<CompanyListing> {
     loading(context);
     try {
       if (companyFormKey.currentState!.validate()) {
-        await LocalDbProvider().fetchInfo(type: LocalData.companyid).then((cid) async {
+        await LocalDbProvider()
+            .fetchInfo(type: LocalData.companyid)
+            .then((cid) async {
           if (cid != null) {
             ProfileModel profileModel = ProfileModel();
             profileModel.username = name.text;
@@ -90,7 +92,9 @@ class _CompanyListingState extends State<CompanyListing> {
             }
             profileModel.userLoginId = userid.text;
             profileModel.password = password.text;
-            await FireStoreProvider().updateCompany(docId: cid, companyData: profileModel).then((value) async {
+            await FireStoreProvider()
+                .updateCompany(docId: cid, companyData: profileModel)
+                .then((value) async {
               await FirebaseAuthProvider()
                   .updateUserLogin(
                 email: userid.text,
@@ -100,28 +104,30 @@ class _CompanyListingState extends State<CompanyListing> {
               )
                   .then((value) async {
                 if (uploadCompanyPic != null) {
-                  await FireStorageProvider()
-                      .uploadImage(
-                    fileData: uploadCompanyPic!,
-                    fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-                    filePath: "company",
-                  )
-                      .then((downloadLink) async {
-                    if (downloadLink != null && downloadLink.isNotEmpty) {
-                      await FireStoreProvider().updateCompanyPic(docId: cid, imageLink: downloadLink).then((value) {
-                        Navigator.pop(context);
-                        snackBarCustom(
-                          context,
-                          true,
-                          "Successfully Updated Company Information",
-                        );
-                      });
-                    } else {
-                      // exit Loading Progroccess
-                      Navigator.pop(context);
-                      snackBarCustom(context, false, "Something went Wrong");
-                    }
-                  });
+                  // await FireStorageProvider()
+                  //     .uploadImage(
+                  //   fileData: uploadCompanyPic!,
+                  //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+                  //   filePath: "company",
+                  // )
+                  //     .then((downloadLink) async {
+                  //   if (downloadLink != null && downloadLink.isNotEmpty) {
+                  //     await FireStoreProvider()
+                  //         .updateCompanyPic(docId: cid, imageLink: downloadLink)
+                  //         .then((value) {
+                  //       Navigator.pop(context);
+                  //       snackBarCustom(
+                  //         context,
+                  //         true,
+                  //         "Successfully Updated Company Information",
+                  //       );
+                  //     });
+                  //   } else {
+                  //     // exit Loading Progroccess
+                  //     Navigator.pop(context);
+                  //     snackBarCustom(context, false, "Something went Wrong");
+                  //   }
+                  // });
                 } else {
                   Navigator.pop(context);
                   snackBarCustom(
@@ -171,7 +177,8 @@ class _CompanyListingState extends State<CompanyListing> {
       body: FutureBuilder(
         future: companyHandler,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
@@ -195,7 +202,8 @@ class _CompanyListingState extends State<CompanyListing> {
                               Center(
                                 child: GestureDetector(
                                   onTap: () async {
-                                    var imageResult = await FilePickerProvider().showFileDialog(context);
+                                    var imageResult = await FilePickerProvider()
+                                        .showFileDialog(context);
                                     if (imageResult != null) {
                                       setState(() {
                                         uploadCompanyPic = imageResult;
@@ -268,7 +276,8 @@ class _CompanyListingState extends State<CompanyListing> {
                                       formName: "Full Name",
                                       prefixIcon: Icons.person,
                                       validation: (input) {
-                                        return FormValidation().commonValidation(
+                                        return FormValidation()
+                                            .commonValidation(
                                           input: input,
                                           isMandorty: true,
                                           formName: "Full Name",
@@ -282,7 +291,8 @@ class _CompanyListingState extends State<CompanyListing> {
                                       formName: "Company Full Name",
                                       prefixIcon: Icons.business_outlined,
                                       validation: (input) {
-                                        return FormValidation().commonValidation(
+                                        return FormValidation()
+                                            .commonValidation(
                                           input: input,
                                           isMandorty: true,
                                           formName: "Company Name",
@@ -296,7 +306,8 @@ class _CompanyListingState extends State<CompanyListing> {
                                       formName: "Company Address",
                                       prefixIcon: Icons.place_outlined,
                                       validation: (input) {
-                                        return FormValidation().commonValidation(
+                                        return FormValidation()
+                                            .commonValidation(
                                           input: input,
                                           isMandorty: true,
                                           formName: "Address",
@@ -310,7 +321,8 @@ class _CompanyListingState extends State<CompanyListing> {
                                       formName: "Pincode",
                                       prefixIcon: Icons.near_me_outlined,
                                       validation: (input) {
-                                        return FormValidation().pincodeValidation(
+                                        return FormValidation()
+                                            .pincodeValidation(
                                           input: input.toString(),
                                           isMandorty: true,
                                         );
@@ -348,14 +360,16 @@ class _CompanyListingState extends State<CompanyListing> {
                                       controller: gstno,
                                       lableName: "GST No",
                                       formName: "GST Number",
-                                      prefixIcon: Icons.account_balance_outlined,
+                                      prefixIcon:
+                                          Icons.account_balance_outlined,
                                       keyboardType: TextInputType.phone,
                                     ),
                                     InputForm(
                                       controller: userid,
                                       lableName: "User Id",
                                       formName: "User Id",
-                                      prefixIcon: Icons.alternate_email_outlined,
+                                      prefixIcon:
+                                          Icons.alternate_email_outlined,
                                       keyboardType: TextInputType.text,
                                       validation: (input) {
                                         return FormValidation().emailValidation(
@@ -371,9 +385,11 @@ class _CompanyListingState extends State<CompanyListing> {
                                       formName: "Passsword",
                                       isPasswordForm: true,
                                       prefixIcon: Icons.key,
-                                      keyboardType: TextInputType.visiblePassword,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
                                       validation: (input) {
-                                        return FormValidation().passwordValidation(
+                                        return FormValidation()
+                                            .passwordValidation(
                                           input: input.toString(),
                                           minLength: 6,
                                           maxLength: 13,
@@ -402,7 +418,8 @@ class _CompanyListingState extends State<CompanyListing> {
                 ),
               ),
             );
-          } else if (snapshot.connectionState == ConnectionState.done && snapshot.hasError) {
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasError) {
             return Center(
               child: Container(
                 decoration: BoxDecoration(
@@ -429,7 +446,9 @@ class _CompanyListingState extends State<CompanyListing> {
                       height: 15,
                     ),
                     Text(
-                      snapshot.error.toString() == "null" ? "Something went Wrong" : snapshot.error.toString(),
+                      snapshot.error.toString() == "null"
+                          ? "Something went Wrong"
+                          : snapshot.error.toString(),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black54,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/varibales.dart';
 
 import '../../../firebase/datamodel/datamodel.dart';
-import '../../../firebase/firestorageprovider.dart';
+// import '../../../firebase/firestorageprovider.dart';
 import '../../../firebase/firestore_provider.dart';
 import '../../../provider/imagepickerprovider.dart';
 import '../../../utlities/provider/localdb.dart';
@@ -96,14 +96,17 @@ class _StaffDetailsState extends State<StaffDetails> {
           });
           snackBarCustom(context, false, "Permission is Must");
         } else {
-          await LocalDbProvider().fetchInfo(type: LocalData.companyid).then((cid) async {
+          await LocalDbProvider()
+              .fetchInfo(type: LocalData.companyid)
+              .then((cid) async {
             if (cid != null) {
               StaffDataModel model = StaffDataModel();
               model.userName = fullName.text;
               model.phoneNo = phoneNO.text;
               model.userid = "${userID.text}@$companyID";
               model.password = password.text;
-              StaffPermissionDataModel permissionModel = StaffPermissionDataModel();
+              StaffPermissionDataModel permissionModel =
+                  StaffPermissionDataModel();
               permissionModel.product = product;
               permissionModel.category = category;
               permissionModel.customer = customer;
@@ -112,21 +115,33 @@ class _StaffDetailsState extends State<StaffDetails> {
               permissionModel.billofsupply = billofsupply;
 
               model.permission = permissionModel;
-              await FireStoreProvider().checkStaffAlreadyExiest(loginID: model.userid!).then((staffCheck) async {
+              await FireStoreProvider()
+                  .checkStaffAlreadyExiest(loginID: model.userid!)
+                  .then((staffCheck) async {
                 if (staffCheck != null) {
                   if (staffCheck.docs.isEmpty) {
-                    await FireStoreProvider().updateStaff(staffData: model, docID: crtStaffData!.docID!).then((value) {
+                    await FireStoreProvider()
+                        .updateStaff(
+                            staffData: model, docID: crtStaffData!.docID!)
+                        .then((value) {
                       Navigator.pop(context);
-                      snackBarCustom(context, true, "Successfully Update Staff");
+                      snackBarCustom(
+                          context, true, "Successfully Update Staff");
                     });
-                  } else if (staffCheck.docs.isNotEmpty && staffCheck.docs.first.id == crtStaffData!.docID) {
-                    await FireStoreProvider().updateStaff(staffData: model, docID: crtStaffData!.docID!).then((value) {
+                  } else if (staffCheck.docs.isNotEmpty &&
+                      staffCheck.docs.first.id == crtStaffData!.docID) {
+                    await FireStoreProvider()
+                        .updateStaff(
+                            staffData: model, docID: crtStaffData!.docID!)
+                        .then((value) {
                       Navigator.pop(context);
-                      snackBarCustom(context, true, "Successfully Update Staff");
+                      snackBarCustom(
+                          context, true, "Successfully Update Staff");
                     });
                   } else {
                     Navigator.pop(context);
-                    snackBarCustom(context, false, "Staff Login ID Already Exists");
+                    snackBarCustom(
+                        context, false, "Staff Login ID Already Exists");
                   }
                 } else {
                   Navigator.pop(context);
@@ -148,21 +163,23 @@ class _StaffDetailsState extends State<StaffDetails> {
   updateStaffImage(File profileImage) async {
     loading(context);
     try {
-      var downloadLink = await FireStorageProvider().uploadImage(
-        fileData: profileImage,
-        fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-        filePath: 'staff',
-      );
-      StaffDataModel model = StaffDataModel();
-      model.profileImg = downloadLink;
-      await FireStoreProvider().updateProfileStaff(staffData: model, docID: crtStaffData!.docID!).then((value) {
-        setState(() {
-          crtStaffData!.profileImg = downloadLink;
-        });
+      // var downloadLink = await FireStorageProvider().uploadImage(
+      //   fileData: profileImage,
+      //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+      //   filePath: 'staff',
+      // );
+      // StaffDataModel model = StaffDataModel();
+      // model.profileImg = downloadLink;
+      // await FireStoreProvider()
+      //     .updateProfileStaff(staffData: model, docID: crtStaffData!.docID!)
+      //     .then((value) {
+      //   setState(() {
+      //     crtStaffData!.profileImg = downloadLink;
+      //   });
 
-        Navigator.pop(context);
-        snackBarCustom(context, true, "Successfully Update Staff");
-      });
+      //   Navigator.pop(context);
+      //   snackBarCustom(context, true, "Successfully Update Staff");
+      // });
     } catch (e) {
       Navigator.pop(context);
       snackBarCustom(context, false, e.toString());
@@ -172,7 +189,9 @@ class _StaffDetailsState extends State<StaffDetails> {
   deleteStaff() async {
     try {
       loading(context);
-      await FireStoreProvider().deleteStaff(docID: crtStaffData!.docID!).then((value) {
+      await FireStoreProvider()
+          .deleteStaff(docID: crtStaffData!.docID!)
+          .then((value) {
         Navigator.pop(context);
         setState(() {
           staffListingcontroller.animateToPage(
@@ -260,7 +279,8 @@ class _StaffDetailsState extends State<StaffDetails> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        var imageResult = await FilePickerProvider().showFileDialog(context);
+                        var imageResult =
+                            await FilePickerProvider().showFileDialog(context);
                         if (imageResult != null) {
                           updateStaffImage(imageResult);
                         }
@@ -384,7 +404,8 @@ class _StaffDetailsState extends State<StaffDetails> {
                                         ),
                                       ),
                                       validator: (input) {
-                                        return FormValidation().commonValidation(
+                                        return FormValidation()
+                                            .commonValidation(
                                           input: input,
                                           isMandorty: true,
                                           formName: "userid",
@@ -460,13 +481,19 @@ class _StaffDetailsState extends State<StaffDetails> {
                         ),
                       ],
                     ),
-                    if (!product && !category && !customer && !orders && !estimate && permissionError != null)
+                    if (!product &&
+                        !category &&
+                        !customer &&
+                        !orders &&
+                        !estimate &&
+                        permissionError != null)
                       Center(
                         child: Text(
                           permissionError ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Colors.red,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Colors.red,
+                                  ),
                         ),
                       ),
                     Wrap(
@@ -571,7 +598,11 @@ class _StaffDetailsState extends State<StaffDetails> {
                         // )
                       ],
                     ),
-                    if (!product && !category && !customer && !orders && !estimate)
+                    if (!product &&
+                        !category &&
+                        !customer &&
+                        !orders &&
+                        !estimate)
                       const Center(
                         child: Padding(
                           padding: EdgeInsets.all(10.0),

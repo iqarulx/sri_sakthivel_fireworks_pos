@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
+// import 'package:sri_sakthivel_fireworks_pos/firebase/firestorageprovider.dart';
 import 'package:sri_sakthivel_fireworks_pos/screen/mainapp/homelanding.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/utlities.dart';
 import 'package:sri_sakthivel_fireworks_pos/utlities/validation.dart';
@@ -93,7 +93,10 @@ class _RegisterCompanyState extends State<RegisterCompany> {
         profileModel.filled = true;
         profileModel.password = widget.password;
 
-        await profile.where("company_unique_id", isEqualTo: companyUnquieId.text).get().then((value) {
+        await profile
+            .where("company_unique_id", isEqualTo: companyUnquieId.text)
+            .get()
+            .then((value) {
           if (value.docs.isEmpty) {
             profileModel.companyUniqueID = companyUnquieId.text;
           }
@@ -112,54 +115,58 @@ class _RegisterCompanyState extends State<RegisterCompany> {
           deviceData.deviceName = deviceInfo.deviceName.toString();
           deviceData.lastlogin = DateTime.now();
           deviceData.deviceType = deviceInfo.deviceType.toString();
-          await profile.doc(widget.docid).collection('login_device').add(deviceData.toMap());
+          await profile
+              .doc(widget.docid)
+              .collection('login_device')
+              .add(deviceData.toMap());
         }
 
         // Once update Data to upload Image
-        FireStorageProvider storage = FireStorageProvider();
-        var downloadLink = await storage.uploadImage(
-          fileData: profileImage!,
-          fileName: DateTime.now().millisecondsSinceEpoch.toString(),
-          filePath: 'company',
-        );
-        if (downloadLink != null && downloadLink.isNotEmpty) {
-          await profile.doc(widget.docid).set(
-            {
-              "company_logo": downloadLink.toString(),
-            },
-            SetOptions(merge: true),
-          ).then((value) async {
-            LocalDbProvider localdb = LocalDbProvider();
-            await localdb
-                .createNewUser(
-              username: username.text,
-              uID: widget.uid,
-              companyID: widget.docid,
-              loginEmail: widget.email,
-              companyUniqueId: companyUnquieId.text,
-              isAdmin: true,
-              prCategory: true,
-              prCustomer: true,
-              prEstimate: true,
-              prOrder: true,
-              prProduct: true,
-              prBillofSupply: true,
-            )
-                .then((value) {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeLanding(),
-                ),
-              );
-            });
+        // FireStorageProvider storage = FireStorageProvider();
+        // var downloadLink = await storage.uploadImage(
+        //   fileData: profileImage!,
+        //   fileName: DateTime.now().millisecondsSinceEpoch.toString(),
+        //   filePath: 'company',
+        // );
+        // if (downloadLink != null && downloadLink.isNotEmpty) {
+        await profile.doc(widget.docid).set(
+          {
+            // "company_logo": downloadLink.toString(),
+            "company_logo": "",
+          },
+          SetOptions(merge: true),
+        ).then((value) async {
+          LocalDbProvider localdb = LocalDbProvider();
+          await localdb
+              .createNewUser(
+            username: username.text,
+            uID: widget.uid,
+            companyID: widget.docid,
+            loginEmail: widget.email,
+            companyUniqueId: companyUnquieId.text,
+            isAdmin: true,
+            prCategory: true,
+            prCustomer: true,
+            prEstimate: true,
+            prOrder: true,
+            prProduct: true,
+            prBillofSupply: true,
+          )
+              .then((value) {
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeLanding(),
+              ),
+            );
           });
-        } else {
-          // exit Loading Progroccess
-          Navigator.pop(context);
-        }
+        });
+        // } else {
+        //   // exit Loading Progroccess
+        //   Navigator.pop(context);
+        // }
       } else {
         // exit Loading Progroccess
         Navigator.pop(context);
@@ -287,7 +294,8 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                             children: [
                               GestureDetector(
                                 onTap: () async {
-                                  var imageResult = await FilePickerProvider().showFileDialog(context);
+                                  var imageResult = await FilePickerProvider()
+                                      .showFileDialog(context);
                                   if (imageResult != null) {
                                     setState(() {
                                       profileImage = imageResult;
@@ -308,7 +316,8 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                                           image: profileImage == null
                                               ? null
                                               : DecorationImage(
-                                                  image: FileImage(profileImage!),
+                                                  image:
+                                                      FileImage(profileImage!),
                                                   fit: BoxFit.cover,
                                                 ),
                                         ),
@@ -319,7 +328,8 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                                           padding: const EdgeInsets.all(5),
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                           child: const Icon(
                                             Icons.edit,
@@ -414,15 +424,19 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                                     Icons.alternate_email_outlined,
                                   ),
                                 ),
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "Company Unqiue ID is Must";
                                   } else if (value.length < 8) {
                                     return "Company Unqiue ID should be minimum 8 characters";
-                                  } else if (value.isNotEmpty && value.startsWith('@')) {
+                                  } else if (value.isNotEmpty &&
+                                      value.startsWith('@')) {
                                     return "Please Remove @ symbol";
-                                  } else if (RegExp(r"(?=.*[a-z])(?=.*[A-Z])\w+").hasMatch(value)) {
+                                  } else if (RegExp(
+                                          r"(?=.*[a-z])(?=.*[A-Z])\w+")
+                                      .hasMatch(value)) {
                                     return "Only use lowercase";
                                   } else {
                                     return null;
@@ -434,7 +448,10 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                               ),
                               Text(
                                 "Example: @${widget.companyName}, @${widget.companyName}0123",
-                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
                                       color: Colors.grey,
                                     ),
                               ),
@@ -443,7 +460,10 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                               ),
                               Text(
                                 "Note: Company Unique ID is one time creation, Once Create its not changeable",
-                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
                                       color: Colors.grey,
                                     ),
                               ),
@@ -614,7 +634,8 @@ class _RegisterCompanyState extends State<RegisterCompany> {
                                 height: 5,
                               ),
                               DropdownButtonFormField<String>(
-                                value: state.isEmpty || city.isEmpty ? null : city,
+                                value:
+                                    state.isEmpty || city.isEmpty ? null : city,
                                 items: cityMenuList,
                                 onChanged: (v) {
                                   setState(() {
