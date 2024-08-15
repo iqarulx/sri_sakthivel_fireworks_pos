@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "413939469948",
+    "project_id": "sri-sakthivel-fireworks-pos",
+    "storage_bucket": "sri-sakthivel-fireworks-pos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413939469948:android:b91eb72f8b07cb1674c3f9",
+        "android_client_info": {
+          "package_name": "com.srisoftwarez.sri_sakthivel_fireworks_pos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413939469948-0bs1k6qv6i83vagpsobjl3dte09crr45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkK6xgB2MdRnxydVO1UbQTB5XaZSB1pig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413939469948-0bs1k6qv6i83vagpsobjl3dte09crr45.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "413939469948-h0lb1pttir7o50b46kh4o8krhdqik6jb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.srisoftwarez.sriSakthivelFireworksPos"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
